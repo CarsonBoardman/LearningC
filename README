@@ -3,7 +3,13 @@ Description of projects:
 Login
     The goal here is to make a simple login system where
     every user has their own file
-    Status: segfaults galore
+    NOTE: A file must exist called "userfiles" with the
+    first byte a zero to begin, otherwise will loop forever
+
+    Future project will be adding encryption and actually 
+    something to do once logged in
+    Status: Base project done, expanding it is a future
+    project
 Library Catalog
     This uses a single file for the catalog of a library
     Books are stored with their names, author, number in
