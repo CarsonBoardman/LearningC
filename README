@@ -1,1 +1,12 @@
 I want to learn C. And so I'm going to make several projects from scratch to teach me.
+Description of projects:
+Login
+    The goal here is to make a simple login system where
+    every user has their own file
+    Status: segfaults galore
+Library Catalog
+    This uses a single file for the catalog of a library
+    Books are stored with their names, author, number in
+    stock, and a unique id
+    Status: Adding books works, as well as searching by 
+    id
