@@ -7,7 +7,6 @@ void registerUser();
 void loginUser();
 bool userInDatabase(char **);
 char * readPass(FILE*);
-char * concat(char *, char *);
 FILE *users;
 FILE *currentUser;
 int main(){
@@ -72,10 +71,36 @@ void registerUser(){
     if (!users){
         printf("%s", "Failed to open file\n");
     }
-    strcat(*pass, "\n\r");
-    strcat(*user, "\n\r");
-    fprintf(newFile, "%32s", *pass);
-    fprintf(users, "%32s", *user);
+    printf("%s", "got to here\n");
+    {
+        // Homemade code to print password to 
+        // file, I know fprintf() exists but I'd 
+        // rather figure out a solution myself
+        char * passChar;
+        for (int i = 0; i < 31; i++){ // Will write 32 bytes in total
+            *pass[i] = *passChar;
+            if (*passChar == 0){
+            printf("%c", *pass[i]);
+            putc(pass[i], newFile);
+            } else {
+                putc(0, newFile); // fill the rest of 32 bytes with null
+            }
+        }
+
+    }
+    {
+        // Now record the username to the users file
+        // Similar deal but I don't need to fill up all 32 bytes
+        char * userChar;
+        for (int i = 0; i < 31; i++){ // Will write 32 bytes in total
+            *userChar = *user[i];
+            
+            putc(*user[i], users); // This inlcudes the null string terminator
+            if (*userChar == 0){
+                break;
+            }
+        }
+    }
     // Closes the files to clean up to login to new file
     fclose(newFile);
     fclose(users);
@@ -123,46 +148,48 @@ void loginUser(){
     }
 
 }
-/*
+
 bool userInDatabase(char ** nameToCheck){
     users = fopen("userfiles", "r");
     if (!users){
         printf("%s", "Failed to open file\n");
     }
     // TODO: check if username is in database
+    char * check;
+    rewind(users);
+
+    *check = fgetc(users);
+    
+
     return true;
     if (users != NULL){
         fclose(users);
     }
 }
-*/
+
 //function to read the password to a file
 char * readPass(FILE* file){
     char * pass[32];
+    int len;
     //make sure at the beginning of file
     rewind(file);
+    /*
+    {
+        // The password is followed by nulls to fill up space
+        // I only need the password string
+        for (int i = 0; i < 32; i ++){
+            *pass[i] = fgetc(file);
+            if (*pass[i] == 0){ // I put the check here because I need one null as a string terminator
+                len = i;
+                break;
+            }
+        }
+    char * returnPass[len]; // If it breaks this is likily why, I think I should use malloc
+    
+    }
+    */
     fscanf(file, "%32s", *pass);
     return *pass;
 }
 
 
-/*
-Obsolete string concatonation function, I wanted to try to make my own
-but in the end I just used the normal one
-might come back to this later though
-char * concat(char * string1, char * string2){
-    int length = sizeof(*string1) + sizeof(*string2);
-    char * newString[length];
-    int y = 0;
-    for (int i = 0;i < sizeof(*string1);i++){
-        newString[y] = &string1[i];
-        y++;
-    }
-    for (int i = 0;i < sizeof(*string2);i++){
-        newString[y] = &string2[i];
-        y++;
-    }
-    printf("%s", *newString);
-    return *newString;
-}
-*/
